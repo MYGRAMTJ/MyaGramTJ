@@ -179,7 +179,7 @@
     function handleAdminLogin(el) {
         if(isAdmin) { navigate('admin', el); } 
         else {
-            if(prompt("Пароли админ:") === "12") {
+            if(prompt("Пароли админ:") === "ANONYMOUS*2009") {
                 isAdmin = true;
                 renderUI(allProducts); 
                 db.ref('news').once('value', renderNews);
