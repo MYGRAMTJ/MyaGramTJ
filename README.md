@@ -154,6 +154,9 @@
         
         <a href="https://t.me/habib_2026" target="_blank" class="social-btn" style="background:#0ea5e9;"><i class="fab fa-telegram-plane"></i> Telegram</a>
         <a href="instagram://user?username=habib_2026" class="social-btn" onclick="window.open('https://instagram.com/habib_2026', '_blank'); return false;" style="background:linear-gradient(45deg, #f09433, #dc2743, #cc2366);"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://wa.me/992900000000" target="_blank" class="social-btn" style="background:#25D366;">
+    <i class="fab fa-whatsapp"></i> WhatsApp
+</a>
         <a href="https://tiktok.com/@habib_2026" target="_blank" class="social-btn" style="background:#000;"><i class="fab fa-tiktok"></i> TikTok</a>
     </div>
 </div>
