@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="tg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKT SHOP - Exclusive Business</title>
+    <title>MKT SHOP - Professional Edition</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -33,6 +34,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 2000; max-height: 400px; overflow-y: auto; 
         }
         .news-item { border-bottom: 1px solid #f1f5f9; padding: 12px 0; position: relative; }
+        .news-del-btn { position: absolute; right: 5px; top: 12px; color: #ef4444; cursor: pointer; padding: 5px; }
 
         .categories { display: flex; gap: 10px; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; }
         .cat-btn { padding: 10px 22px; background: white; border-radius: 15px; border: none; font-size: 14px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-weight: 600; color: #475569; }
@@ -162,7 +164,7 @@
 
     function handleAdminLogin(el) {
         if(isAdmin) navigate('admin', el);
-        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { isAdmin = true; renderUI(allProducts); navigate('admin', el); }
+        else if(prompt("Пароли админ:") === "12") { isAdmin = true; renderUI(allProducts); db.ref('news').once('value', renderNews); navigate('admin', el); }
     }
 
     function processImg(input) {
@@ -193,7 +195,6 @@
         db.ref('products').on('value', (snap) => {
             allProducts = []; const data = snap.val();
             for(let id in data) allProducts.push({ id, ...data[id] });
-            // Сортировка: аввал молҳои pinned, баъд дигарон
             allProducts.sort((a, b) => (b.pinned || false) - (a.pinned || false));
             renderUI(allProducts);
         });
@@ -204,8 +205,9 @@
         const data = snap.val(); let html = "", count = 0;
         for(let id in data) {
             count++;
-            html += `<div class="news-item"><p>${data[id].txt}</p><small>${data[id].date}</small>
-                ${isAdmin ? `<i class="fas fa-trash" style="position:absolute; right:0; top:10px; color:red;" onclick="deleteItem('news/${id}')"></i>` : ''}
+            html += `<div class="news-item">
+                <p>${data[id].txt}</p><small>${data[id].date}</small>
+                ${isAdmin ? `<i class="fas fa-trash-alt news-del-btn" onclick="deleteItem('news/${id}')"></i>` : ''}
             </div>`;
         }
         document.getElementById('news-list-content').innerHTML = html || "Хабар нест.";
@@ -224,11 +226,10 @@
                 <i class="fa-heart fav-btn ${isFav?'fas active':'far'}" onclick="toggleFav('${p.id}')"></i>
                 <img src="${p.img}" onclick="openModal('${p.img}', '${p.name}', '${p.price}', '${p.desc}')">
                 <h4>${p.name}</h4><p class="price">${op}${p.price} TJS</p>
-                ${isAdmin ? `
-                    <div class="admin-btns">
-                        <button onclick="togglePin('${p.id}', ${isPinned})" class="btn-sm" style="background:var(--gold)">${isPinned ? '📌 Открепить' : '📌 Закрепить'}</button>
-                        <button onclick="deleteItem('products/${p.id}')" class="btn-sm" style="background:red">Удалить</button>
-                    </div>` : ''}
+                ${isAdmin ? `<div class="admin-btns">
+                    <button onclick="togglePin('${p.id}', ${isPinned})" class="btn-sm" style="background:var(--gold)">${isPinned ? '📌 Открепить' : '📌 Закрепить'}</button>
+                    <button onclick="deleteItem('products/${p.id}')" class="btn-sm" style="background:red">Удалить</button>
+                </div>` : ''}
             </div>`;
         });
         document.getElementById('productGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center;'>Мол нест.</p>";
