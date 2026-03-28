@@ -1,4 +1,4 @@
-<html lang="tg">
+ <html lang="tg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +163,7 @@
 
     function handleAdminLogin(el) {
         if(isAdmin) navigate('admin', el);
-        else if(prompt("Пароли админ:") === "12") { isAdmin = true; renderUI(allProducts); db.ref('news').once('value', renderNews); navigate('admin', el); }
+        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { isAdmin = true; renderUI(allProducts); db.ref('news').once('value', renderNews); navigate('admin', el); }
     }
 
     function processImg(input) {
