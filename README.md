@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKT SHOP - Ultimate Edition</title>
+    <title>MKT SHOP - Professional</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -11,51 +11,73 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --blue: #1a3a5f; --orange: #d35400; --bg: #f4f7f9; }
+        :root { --blue: #1a3a5f; --orange: #d35400; --bg: #e2e8f0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #cbd5e0; display: flex; justify-content: center; min-height: 100vh; }
-
-        .app-container { width: 100%; max-width: 450px; background: var(--bg); min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        header { background: var(--blue); padding: 15px; color: white; border-radius: 0 0 20px 20px; position: sticky; top: 0; z-index: 1000; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        body { 
+            background: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        /* Контейнер барои зебо истодан дар компютер */
+        .app-container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: #f8fafc; 
+            min-height: 90vh; 
+            position: relative; 
+            padding-bottom: 80px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 30px;
+            overflow: hidden;
+        }
         
-        .search-box { background: white; border-radius: 12px; display: flex; padding: 10px; align-items: center; }
-        .search-box input { border: none; width: 100%; outline: none; padding-left: 10px; color: #333; font-size: 14px; }
+        header { background: var(--blue); padding: 20px; color: white; border-radius: 0 0 25px 25px; sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        .search-box { background: white; border-radius: 15px; display: flex; padding: 12px; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .search-box input { border: none; width: 100%; outline: none; padding-left: 10px; color: #333; font-size: 15px; }
 
-        /* NOTIFICATION PANEL */
-        #notif-panel { display: none; position: absolute; top: 60px; right: 10px; width: 280px; background: white; border-radius: 15px; padding: 15px; color: #333; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 2000; max-height: 400px; overflow-y: auto; }
-        .news-item { border-bottom: 1px solid #eee; padding: 10px 0; position: relative; }
-        .news-item p { font-size: 13px; color: #444; margin-right: 20px; }
-        .news-item small { color: var(--orange); font-size: 11px; }
-        .del-btn-news { position: absolute; top: 10px; right: 0; color: #ff4757; cursor: pointer; display: none; }
+        #notif-panel { 
+            display: none; position: absolute; top: 75px; right: 15px; width: 300px; 
+            background: white; border-radius: 20px; padding: 15px; color: #333; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 2000; max-height: 400px; overflow-y: auto; 
+        }
+        .news-item { border-bottom: 1px solid #f1f5f9; padding: 12px 0; position: relative; }
+        .news-item p { font-size: 14px; color: #444; margin-bottom: 4px; }
+        .news-item small { color: var(--orange); font-size: 11px; font-weight: 600; }
 
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 15px 10px; scrollbar-width: none; }
-        .cat-btn { padding: 8px 18px; background: white; border-radius: 20px; border: none; font-size: 13px; cursor: pointer; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: #555; }
-        .cat-btn.active { background: var(--orange); color: white; }
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; }
+        .cat-btn { padding: 10px 22px; background: white; border-radius: 15px; border: none; font-size: 14px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-weight: 600; color: #475569; transition: 0.3s; }
+        .cat-btn.active { background: var(--orange); color: white; transform: translateY(-2px); }
 
-        .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
+        .page { display: none; padding: 15px; animation: fadeIn 0.4s ease-out; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: white; border-radius: 15px; padding: 12px; text-align: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .card img { width: 100%; height: 120px; object-fit: contain; border-radius: 10px; cursor: pointer; }
-        .price { color: var(--orange); font-weight: 700; margin-top: 5px; }
-        .fav-btn { position: absolute; top: 10px; right: 10px; font-size: 18px; cursor: pointer; color: #ddd; z-index: 5; }
-        .fav-btn.active { color: #ff4757; }
-        .admin-del-prod { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 10px; margin-top: 10px; cursor: pointer; display: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .card { background: white; border-radius: 20px; padding: 15px; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: 0.3s; border: 1px solid #f1f5f9; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 140px; object-fit: contain; border-radius: 12px; cursor: pointer; background: #fafafa; }
+        .card h4 { font-size: 15px; margin-top: 10px; color: #1e293b; }
+        .price { color: var(--orange); font-weight: 700; font-size: 16px; margin: 5px 0; }
+        
+        .fav-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; color: #cbd5e1; z-index: 5; transition: 0.2s; }
+        .fav-btn.active { color: #ef4444; }
 
-        .admin-section { background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed var(--blue); }
-        .auth-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; outline: none; }
+        .admin-section { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 2px dashed #cbd5e1; }
+        .auth-input { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; margin-bottom: 12px; outline: none; font-size: 14px; }
 
-        nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: white; display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #eee; z-index: 1000; }
-        .nav-link { color: #bbb; font-size: 24px; cursor: pointer; }
-        .nav-link.active { color: var(--blue); }
+        nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #f1f5f9; z-index: 1000; }
+        .nav-link { color: #94a3b8; font-size: 26px; cursor: pointer; transition: 0.3s; }
+        .nav-link.active { color: var(--blue); transform: scale(1.15); }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; width: 100%; border-radius: 25px; padding: 20px; text-align: center; position: relative; }
-        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; color: white; text-decoration: none; border-radius: 15px; margin-top: 10px; font-weight: bold; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; text-align: center; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px; color: white; text-decoration: none; border-radius: 15px; margin-top: 12px; font-weight: 700; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -63,18 +85,18 @@
 <div class="app-container">
     <header>
         <div class="header-top">
-            <b style="font-size: 22px;">MKT SHOP</b>
+            <b style="font-size: 24px; letter-spacing: -0.5px;">MKT SHOP</b>
             <div onclick="toggleNotif()" style="position:relative; cursor:pointer; padding: 5px;">
-                <i class="fas fa-bell" style="font-size: 22px;"></i>
-                <span id="badge" style="display:none; position:absolute; top:0; right:0; background:red; color:white; font-size:10px; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;">0</span>
+                <i class="fas fa-bell" style="font-size: 24px;"></i>
+                <span id="badge" style="display:none; position:absolute; top:0; right:0; background:#ef4444; color:white; font-size:11px; min-width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--blue);">0</span>
             </div>
         </div>
         <div class="search-box">
-            <i class="fas fa-search" style="color:#aaa"></i>
+            <i class="fas fa-search" style="color:#94a3b8"></i>
             <input type="text" id="searchInput" placeholder="Ҷустуҷӯи мол..." onkeyup="liveSearch()">
         </div>
         <div id="notif-panel">
-            <h4 style="border-bottom:2px solid #eee; padding-bottom:8px; margin-bottom:10px;">📢 Хабарҳо</h4>
+            <h4 style="margin-bottom:10px; color:var(--blue); font-size:18px;">📢 Хабарҳо</h4>
             <div id="news-list-content"></div>
         </div>
     </header>
@@ -87,27 +109,31 @@
     </div>
 
     <div id="home" class="page active"><div id="productGrid" class="grid"></div></div>
-    <div id="favs" class="page"><h3>Дилхоҳ ❤️</h3><br><div id="favGrid" class="grid"></div></div>
+    
+    <div id="favs" class="page">
+        <h3 style="margin-bottom:20px; color:#1e293b; font-size:20px;">Дилхоҳ ❤️</h3>
+        <div id="favGrid" class="grid"></div>
+    </div>
 
     <div id="admin" class="page">
         <div class="admin-section">
-            <h4>📦 Иловаи Мол</h4><br>
+            <h4 style="margin-bottom:15px;">📦 Иловаи Мол</h4>
             <input type="text" id="p-name" class="auth-input" placeholder="Номи мол">
-            <input type="number" id="p-price" class="auth-input" placeholder="Нарх">
+            <input type="number" id="p-price" class="auth-input" placeholder="Нарх (TJS)">
             <select id="p-cat" class="auth-input">
                 <option value="Телефон">Телефон</option>
                 <option value="Техника">Техника</option>
                 <option value="Либос">Либос</option>
             </select>
-            <textarea id="p-desc" class="auth-input" placeholder="Тавсиф..."></textarea>
+            <textarea id="p-desc" class="auth-input" placeholder="Тавсифи мол..." style="height:80px;"></textarea>
             <input type="file" id="p-file" hidden onchange="processImg(this)">
-            <label for="p-file" style="display:block; background:#eee; padding:12px; border-radius:10px; text-align:center; cursor:pointer; margin-bottom:10px;">📸 Интихоби сурат</label>
-            <button onclick="saveProduct()" style="width:100%; background:green; color:white; border:none; padding:14px; border-radius:12px; font-weight:bold;">ЗАХИРА</button>
+            <label for="p-file" style="display:block; background:#f1f5f9; padding:15px; border-radius:12px; text-align:center; cursor:pointer; margin-bottom:15px; font-weight:600; color:#475569;">📸 Интихоби сурат</label>
+            <button onclick="saveProduct()" style="width:100%; background:#22c55e; color:white; border:none; padding:16px; border-radius:15px; font-weight:700; cursor:pointer;">ЗАХИРА КАРДАН</button>
         </div>
-        <div class="admin-section" style="border-color: orange;">
-            <h4>🚀 Нашри Хабар</h4><br>
-            <textarea id="n-text" class="auth-input" placeholder="Матни хабар..."></textarea>
-            <button onclick="saveNews()" style="width:100%; background:orange; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold;">ФИРИСТОДАН</button>
+        <div class="admin-section" style="border-color: #f59e0b;">
+            <h4 style="margin-bottom:15px;">🚀 Нашри Хабар</h4>
+            <textarea id="n-text" class="auth-input" placeholder="Матни хабар..." style="height:70px;"></textarea>
+            <button onclick="saveNews()" style="width:100%; background:#f59e0b; color:white; border:none; padding:14px; border-radius:15px; font-weight:700; cursor:pointer;">ФИРИСТОДАН</button>
         </div>
     </div>
 
@@ -120,21 +146,15 @@
 
 <div id="p-modal" class="modal">
     <div class="modal-content">
-        <span onclick="closeModal()" style="position:absolute; top:15px; right:20px; font-size:30px; cursor:pointer;">&times;</span>
-        <img id="m-img" style="width:100%; height:180px; object-fit:contain; border-radius:15px;">
-        <h2 id="m-name" style="margin-top:10px;"></h2>
-        <h3 id="m-price" style="color:orange;"></h3>
-        <p id="m-desc" style="font-size:13px; color:#666; margin-bottom:15px; text-align:left;"></p>
+        <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; font-size:35px; cursor:pointer; color:#94a3b8;">&times;</span>
+        <img id="m-img" style="width:100%; height:200px; object-fit:contain; border-radius:20px; background:#f8fafc;">
+        <h2 id="m-name" style="margin-top:15px; color:#1e293b;"></h2>
+        <h3 id="m-price" style="color:var(--orange); margin:10px 0; font-size:22px;"></h3>
+        <p id="m-desc" style="font-size:14px; color:#64748b; margin-bottom:20px; line-height:1.5;"></p>
         
-        <a href="https://t.me/habib_2026" target="_blank" class="social-btn" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i> Telegram</a>
-        
-        <a href="instagram://user?username=habib_2026" class="social-btn" 
-           onclick="window.open('https://instagram.com/habib_2026', '_blank'); return false;"
-           style="background:linear-gradient(45deg, #f09433, #dc2743, #cc2366);">
-           <i class="fab fa-instagram"></i> Instagram
-        </a>
-        
-        <a href="https://tiktok.com/@habib_2026" target="_blank" class="social-btn" style="background:black;"><i class="fab fa-tiktok"></i> TikTok</a>
+        <a href="https://t.me/habib_2026" target="_blank" class="social-btn" style="background:#0ea5e9;"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        <a href="instagram://user?username=habib_2026" class="social-btn" onclick="window.open('https://instagram.com/habib_2026', '_blank'); return false;" style="background:linear-gradient(45deg, #f09433, #dc2743, #cc2366);"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="https://tiktok.com/@habib_2026" target="_blank" class="social-btn" style="background:#000;"><i class="fab fa-tiktok"></i> TikTok</a>
     </div>
 </div>
 
@@ -175,8 +195,9 @@
         const name = document.getElementById('p-name').value, price = document.getElementById('p-price').value,
               cat = document.getElementById('p-cat').value, desc = document.getElementById('p-desc').value;
         if(name && price && tempImg) {
-            db.ref('products').push({ name, price, cat, desc, img: tempImg });
-            alert("Илова шуд!"); location.reload();
+            db.ref('products').push({ name, price, cat, desc, img: tempImg }).then(() => {
+                alert("Илова шуд!"); location.reload();
+            });
         }
     }
 
@@ -203,7 +224,7 @@
             count++;
             html += `<div class="news-item">
                 <p>${data[id].txt}</p><small>${data[id].date}</small>
-                <i class="fas fa-trash del-btn-news" style="display:${isAdmin?'block':'none'}" onclick="deleteItem('news/${id}')"></i>
+                <i class="fas fa-trash-alt" style="display:${isAdmin?'block':'none'}; position:absolute; top:10px; right:0; color:red; cursor:pointer;" onclick="deleteItem('news/${id}')"></i>
             </div>`;
         }
         document.getElementById('news-list-content').innerHTML = html || "Хабар нест.";
@@ -220,17 +241,34 @@
                 <i class="fa-heart fav-btn ${isFav?'fas active':'far'}" onclick="toggleFav('${p.id}')"></i>
                 <img src="${p.img}" onclick="openModal('${p.img}', '${p.name}', '${p.price}', '${p.desc}')">
                 <h4>${p.name}</h4><p class="price">${p.price} TJS</p>
-                <button class="admin-del-prod" style="display:${isAdmin?'inline-block':'none'}" onclick="deleteItem('products/${p.id}')">Удалить</button>
+                ${isAdmin ? `<button onclick="deleteItem('products/${p.id}')" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:11px; margin-top:8px; cursor:pointer; font-weight:600;">Удалить</button>` : ''}
             </div>`;
         });
-        document.getElementById('productGrid').innerHTML = html || "Мол нест.";
+        document.getElementById('productGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center; padding:20px; color:#94a3b8;'>Мол нест.</p>";
     }
 
     function toggleFav(id) {
-        if(!favorites.includes(id)) favorites.push(id);
-        else favorites = favorites.filter(f => f !== id);
+        if(!favorites.includes(id)) {
+            favorites.push(id);
+        } else {
+            favorites = favorites.filter(f => f !== id);
+        }
         localStorage.setItem('mkt_favs', JSON.stringify(favorites));
         renderUI(allProducts);
+        if(document.getElementById('favs').classList.contains('active')) renderFavs();
+    }
+
+    function renderFavs() {
+        const favList = allProducts.filter(p => favorites.includes(p.id));
+        let html = "";
+        favList.forEach(p => {
+            html += `<div class="card">
+                <i class="fas fa-heart fav-btn active" onclick="toggleFav('${p.id}')"></i>
+                <img src="${p.img}" onclick="openModal('${p.img}', '${p.name}', '${p.price}', '${p.desc}')">
+                <h4>${p.name}</h4><p class="price">${p.price} TJS</p>
+            </div>`;
+        });
+        document.getElementById('favGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center; padding:20px; color:#94a3b8;'>Дилхоҳ холӣ аст.</p>";
     }
 
     function filterCat(cat, btn) {
@@ -259,11 +297,13 @@
 
     function closeModal() { document.getElementById('p-modal').style.display = 'none'; }
     function deleteItem(path) { if(confirm("Нест карда шавад?")) db.ref(path).remove(); }
+    
     function navigate(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
+        window.scrollTo(0,0);
     }
 </script>
 </body>
