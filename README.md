@@ -162,7 +162,7 @@
 
     function handleAdminLogin(el) {
         if(isAdmin) navigate('admin', el);
-        else if(prompt("Пароли админ:") === "12") { isAdmin = true; renderUI(allProducts); navigate('admin', el); }
+        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { isAdmin = true; renderUI(allProducts); navigate('admin', el); }
     }
 
     function processImg(input) {
