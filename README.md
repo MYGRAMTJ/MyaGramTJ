@@ -1,8 +1,8 @@
- <html lang="tg">
+<html lang="tg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKT SHOP - Professional Edition</title>
+    <title>MGT SHOP - Professional Edition</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -101,6 +101,11 @@
     <div id="favs" class="page"><h3 style="margin-bottom:20px;">Дилхоҳ ❤️</h3><div id="favGrid" class="grid"></div></div>
 
     <div id="admin" class="page">
+        <div class="admin-section" style="border-color: #22c55e; background: #f0fdf4;">
+            <h4 style="color: #166534;"><i class="fas fa-chart-line"></i> Статистикаи сайт</h4>
+            <p style="font-size: 18px; margin-top: 10px; font-weight: bold; color: #15803d;">Бинандагон: <span id="viewCount">0</span></p>
+        </div>
+
         <div class="admin-section">
             <h4>📦 Иловаи Мол</h4><br>
             <input type="text" id="p-name" class="auth-input" placeholder="Номи мол">
@@ -116,6 +121,7 @@
             <label for="p-file" style="display:block; background:#f1f5f9; padding:15px; border-radius:12px; text-align:center; cursor:pointer; margin-bottom:15px; font-weight:600;">📸 Интихоби сурат</label>
             <button onclick="saveProduct()" style="width:100%; background:#22c55e; color:white; border:none; padding:16px; border-radius:15px; font-weight:700;">ЗАХИРА</button>
         </div>
+        
         <div class="admin-section" style="border-color: orange;">
             <h4>🚀 Нашри Хабар</h4><br>
             <textarea id="n-text" class="auth-input" placeholder="Матни хабар..."></textarea>
@@ -161,9 +167,24 @@
     let tempImg = "", allProducts = [], isAdmin = false;
     let favorites = JSON.parse(localStorage.getItem('mkt_favs')) || [];
 
+    // --- ЛОГИКАИ ҲИСОБКУНАК ---
+    function updateCounter() {
+        const counterRef = db.ref('stats/views');
+        counterRef.transaction((currentValue) => {
+            return (currentValue || 0) + 1;
+        });
+    }
+
     function handleAdminLogin(el) {
         if(isAdmin) navigate('admin', el);
-        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { isAdmin = true; renderUI(allProducts); db.ref('news').once('value', renderNews); navigate('admin', el); }
+        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { 
+            isAdmin = true; 
+            renderUI(allProducts); 
+            db.ref('stats/views').on('value', (snap) => {
+                document.getElementById('viewCount').innerText = snap.val() || 0;
+            });
+            navigate('admin', el); 
+        }
     }
 
     function processImg(input) {
@@ -191,6 +212,7 @@
     }
 
     window.onload = () => {
+        updateCounter(); // Ҳисоб кардани бинандаи нав
         db.ref('products').on('value', (snap) => {
             allProducts = []; const data = snap.val();
             for(let id in data) allProducts.push({ id, ...data[id] });
