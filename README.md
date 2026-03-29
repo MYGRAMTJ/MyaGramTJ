@@ -2,71 +2,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGT SHOP - Professional Edition</title>
+    <title>MKT SHOP | Premium Soft Edition</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { --blue: #1a3a5f; --orange: #d35400; --bg: #e2e8f0; --green: #25D366; --gold: #f1c40f; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; }
-
-        .app-container { 
-            width: 100%; max-width: 480px; background: #f8fafc; min-height: 90vh; 
-            position: relative; padding-bottom: 80px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: 30px; overflow: hidden;
+        :root {
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent: #00f2fe;
+            --premium-gold: #f1c40f;
+            --bg-dark: #0f172a;
         }
-        
-        header { background: var(--blue); padding: 20px; color: white; border-radius: 0 0 25px 25px; position: sticky; top: 0; z-index: 1000; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
-        .search-box { background: white; border-radius: 15px; display: flex; padding: 12px; align-items: center; }
-        .search-box input { border: none; width: 100%; outline: none; padding-left: 10px; color: #333; font-size: 15px; }
 
-        #notif-panel { 
-            display: none; position: absolute; top: 75px; right: 15px; width: 300px; 
-            background: white; border-radius: 20px; padding: 15px; color: #333; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 2000; max-height: 400px; overflow-y: auto; 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg-dark);
+            background-image: radial-gradient(at 0% 0%, rgba(0, 242, 254, 0.12) 0, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(79, 172, 254, 0.12) 0, transparent 50%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
         }
-        .news-item { border-bottom: 1px solid #f1f5f9; padding: 12px 0; position: relative; }
-        .news-del-btn { position: absolute; right: 5px; top: 12px; color: #ef4444; cursor: pointer; padding: 5px; }
 
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; }
-        .cat-btn { padding: 10px 22px; background: white; border-radius: 15px; border: none; font-size: 14px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-weight: 600; color: #475569; }
-        .cat-btn.active { background: var(--orange); color: white; }
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(15, 23, 42, 0.9);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 110px;
+            border-left: 1px solid var(--glass-border);
+            border-right: 1px solid var(--glass-border);
+        }
 
-        .page { display: none; padding: 15px; animation: fadeIn 0.4s ease-out; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        header { 
+            padding: 20px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+        }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-        .card { background: white; border-radius: 20px; padding: 15px; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
-        .card.pinned { border: 2px solid var(--gold); background: #fffdf2; }
-        .pin-icon { position: absolute; top: 10px; left: 10px; color: var(--gold); font-size: 14px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 900; background: linear-gradient(45deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .card img { width: 100%; height: 140px; object-fit: contain; border-radius: 12px; cursor: pointer; background: #fafafa; }
-        .price { color: var(--orange); font-weight: 700; font-size: 16px; margin: 5px 0; }
-        .old-price { text-decoration: line-through; color: #94a3b8; font-size: 13px; margin-right: 5px; }
+        .search-box {
+            margin-top: 15px; 
+            background: var(--glass); 
+            border-radius: 20px; 
+            padding: 12px 18px; 
+            display: flex; 
+            align-items: center;
+            border: 1px solid var(--glass-border);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        .search-box input { background: none; border: none; color: white; margin-left: 10px; outline: none; width: 100%; font-size: 15px; }
+
+        .cat-container {
+            display: flex; gap: 12px; overflow-x: auto; padding: 20px; 
+            scrollbar-width: none; background: transparent;
+        }
+        .cat-btn { 
+            padding: 10px 22px; 
+            background: #1e293b; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 18px; 
+            color: #94a3b8; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -2px -2px 10px rgba(255,255,255,0.02);
+        }
+        .cat-btn.active { 
+            background: var(--accent); 
+            color: #0f172a; 
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent);
+            border: none;
+        }
+
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { 
+            background: var(--glass); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 28px; 
+            padding: 10px; 
+            transition: 0.3s; 
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card img { width: 100%; height: 170px; object-fit: cover; border-radius: 22px; cursor: pointer; }
         
-        .fav-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; color: #cbd5e1; z-index: 5; }
-        .fav-btn.active { color: #ef4444; }
+        /* Ислоҳи нарх дар карточка */
+        .price-tag { color: var(--accent); font-weight: 800; font-size: 17px; margin-top: 8px; display: flex; align-items: baseline; gap: 5px; flex-wrap: wrap; }
+        .old-price { font-size: 12px; color: #94a3b8; text-decoration: line-through; font-weight: 400; }
 
-        .admin-section { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 2px dashed #cbd5e1; }
-        .auth-input { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; margin-bottom: 12px; outline: none; }
+        .pin-tag { position: absolute; top: 15px; left: 15px; background: var(--premium-gold); color: #000; padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 900; z-index: 10; }
 
-        nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #f1f5f9; z-index: 1000; }
-        .nav-link { color: #94a3b8; font-size: 26px; cursor: pointer; }
-        .nav-link.active { color: var(--blue); }
+        .slider-wrapper { position: relative; width: 100%; height: 250px; border-radius: 25px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #m-img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s ease; }
+        .s-btn-nav { 
+            position: absolute; top: 50%; transform: translateY(-50%); 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            color: white; border: 1px solid rgba(255,255,255,0.2); 
+            width: 42px; height: 42px; border-radius: 50%; cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .s-prev { left: 12px; } .s-next { right: 12px; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; text-align: center; position: relative; }
-        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; color: white; text-decoration: none; border-radius: 15px; margin-top: 10px; font-weight: 700; }
-        .admin-btns { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
-        .btn-sm { border: none; padding: 6px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; color: white; }
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .s-btn { 
+            padding: 14px; border-radius: 18px; text-decoration: none; color: white; 
+            font-size: 14px; font-weight: 700; display: flex; align-items: center; 
+            justify-content: center; gap: 8px; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .wa { background: #22c55e; } .tg { background: #3b82f6; }
+        
+        nav { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            width: 85%; max-width: 380px; background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(30px); border-radius: 30px; border: 1px solid var(--glass-border); 
+            display: flex; justify-content: space-around; padding: 18px; z-index: 1000;
+        }
+        .nav-btn { color: rgba(255,255,255,0.3); font-size: 22px; cursor: pointer; }
+        .nav-btn.active { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #1e293b; border-radius: 35px; padding: 30px; width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--glass-border); }
+
+        #news-panel { display: none; position: absolute; top: 90px; left: 20px; right: 20px; background: #1e293b; border: 1px solid var(--glass-border); border-radius: 25px; padding: 20px; z-index: 1100; }
     </style>
 </head>
 <body>
@@ -74,81 +149,62 @@
 <div class="app-container">
     <header>
         <div class="header-top">
-            <b style="font-size: 24px;">MKT SHOP</b>
-            <div onclick="toggleNotif()" style="position:relative; cursor:pointer; padding: 5px;">
+            <div class="logo">MKT SHOP</div>
+            <div onclick="toggleNews()" style="cursor:pointer; position:relative; padding: 5px;">
                 <i class="fas fa-bell" style="font-size: 24px;"></i>
-                <span id="badge" style="display:none; position:absolute; top:0; right:0; background:#ef4444; color:white; font-size:11px; min-width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center;">0</span>
+                <span id="badge" style="display:none; position:absolute; top:2px; right:2px; background:#ff4757; width:10px; height:10px; border-radius:50%; border:2px solid #0f172a;"></span>
             </div>
         </div>
-        <div class="search-box">
-            <i class="fas fa-search" style="color:#94a3b8"></i>
-            <input type="text" id="searchInput" placeholder="Ҷустуҷӯи мол..." onkeyup="liveSearch()">
+        
+        <div id="news-panel">
+            <h3 style="margin-bottom:15px; color:var(--accent); display:flex; align-items:center; gap:10px;"><i class="fas fa-bullhorn"></i> Хабарҳо</h3>
+            <div id="news-content" style="max-height:250px; overflow-y:auto; font-size:14px; text-align:left;"></div>
         </div>
-        <div id="notif-panel">
-            <h4 style="margin-bottom:10px; color:var(--blue);">📢 Хабарҳо</h4>
-            <div id="news-list-content"></div>
+
+        <div class="search-box">
+            <i class="fas fa-search" style="opacity:0.5;"></i>
+            <input type="text" id="searchInput" onkeyup="liveSearch()" placeholder="Ҷустуҷӯи мол...">
         </div>
     </header>
 
-    <div class="categories">
+    <div class="cat-container">
         <button class="cat-btn active" onclick="filterCat('Ҳама', this)">Ҳама</button>
         <button class="cat-btn" onclick="filterCat('Телефон', this)">Телефон</button>
         <button class="cat-btn" onclick="filterCat('Техника', this)">Техника</button>
         <button class="cat-btn" onclick="filterCat('Либос', this)">Либос</button>
     </div>
 
-    <div id="home" class="page active"><div id="productGrid" class="grid"></div></div>
-    <div id="favs" class="page"><h3 style="margin-bottom:20px;">Дилхоҳ ❤️</h3><div id="favGrid" class="grid"></div></div>
+    <div id="home-page" class="page">
+        <div id="productGrid" class="product-grid"></div>
+    </div>
 
-    <div id="admin" class="page">
-        <div class="admin-section" style="border-color: #22c55e; background: #f0fdf4;">
-            <h4 style="color: #166534;"><i class="fas fa-chart-line"></i> Статистикаи сайт</h4>
-            <p style="font-size: 18px; margin-top: 10px; font-weight: bold; color: #15803d;">Бинандагон: <span id="viewCount">0</span></p>
-        </div>
-
-        <div class="admin-section">
-            <h4>📦 Иловаи Мол</h4><br>
-            <input type="text" id="p-name" class="auth-input" placeholder="Номи мол">
-            <input type="number" id="p-price" class="auth-input" placeholder="Нархи ҳозира (TJS)">
-            <input type="number" id="p-old-price" class="auth-input" placeholder="Нархи куҳна (ихтиёрӣ)">
-            <select id="p-cat" class="auth-input">
-                <option value="Телефон">Телефон</option>
-                <option value="Техника">Техника</option>
-                <option value="Либос">Либос</option>
-            </select>
-            <textarea id="p-desc" class="auth-input" placeholder="Тавсиф..." style="height:80px;"></textarea>
-            <input type="file" id="p-file" hidden onchange="processImg(this)">
-            <label for="p-file" style="display:block; background:#f1f5f9; padding:15px; border-radius:12px; text-align:center; cursor:pointer; margin-bottom:15px; font-weight:600;">📸 Интихоби сурат</label>
-            <button onclick="saveProduct()" style="width:100%; background:#22c55e; color:white; border:none; padding:16px; border-radius:15px; font-weight:700;">ЗАХИРА</button>
-        </div>
-        
-        <div class="admin-section" style="border-color: orange;">
-            <h4>🚀 Нашри Хабар</h4><br>
-            <textarea id="n-text" class="auth-input" placeholder="Матни хабар..."></textarea>
-            <button onclick="saveNews()" style="width:100%; background:orange; color:white; border:none; padding:14px; border-radius:15px; font-weight:700;">ФИРИСТОДАН</button>
-        </div>
+    <div id="fav-page" class="page" style="display:none; padding:20px;">
+        <h2 style="margin-bottom:20px;"><i class="fas fa-heart" style="color:#ff4757;"></i> Дилхоҳ</h2>
+        <div id="favGrid" class="product-grid"></div>
     </div>
 
     <nav>
-        <div class="nav-link active" onclick="navigate('home', this)"><i class="fas fa-home"></i></div>
-        <div class="nav-link" onclick="navigate('favs', this); renderFavs()"><i class="fas fa-heart"></i></div>
-        <div class="nav-link" onclick="handleAdminLogin(this)"><i class="fas fa-user-shield"></i></div>
+        <div class="nav-btn active" onclick="showPage('home-page', this)"><i class="fas fa-home"></i></div>
+        <div class="nav-btn" onclick="showPage('fav-page', this); renderFavs()"><i class="fas fa-heart"></i></div>
     </nav>
 </div>
 
 <div id="p-modal" class="modal">
     <div class="modal-content">
-        <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; font-size:35px; cursor:pointer;">&times;</span>
-        <img id="m-img" style="width:100%; height:200px; object-fit:contain; border-radius:20px; background:#f8fafc;">
-        <h2 id="m-name" style="margin-top:15px;"></h2>
-        <h3 id="m-price" style="color:var(--orange); margin:10px 0;"></h3>
-        <p id="m-desc" style="font-size:14px; color:#64748b; margin-bottom:20px;"></p>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <a id="m-wa" href="#" target="_blank" class="social-btn" style="background:var(--green); margin-top:0;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-            <a href="https://t.me/habib_2026" target="_blank" class="social-btn" style="background:#0ea5e9; margin-top:0;"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        <div class="slider-wrapper">
+            <button class="s-btn-nav s-prev" onclick="moveImg(-1)"><i class="fas fa-chevron-left"></i></button>
+            <img id="m-img" src="">
+            <button class="s-btn-nav s-next" onclick="moveImg(1)"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <a href="instagram://user?username=habib_2026" class="social-btn" onclick="window.open('https://instagram.com/habib_2026', '_blank'); return false;" style="background:linear-gradient(45deg, #f09433, #dc2743, #cc2366);"><i class="fab fa-instagram"></i> Instagram</a>
+        <h2 id="m-name" style="font-weight:800;"></h2>
+        <div id="m-price-box" class="price-tag" style="font-size:26px; margin:10px 0; justify-content:center;"></div>
+        <p id="m-desc" style="opacity:0.6; font-size:14px; margin-bottom:20px;"></p>
+        
+        <div class="social-grid">
+            <a id="m-wa" href="#" target="_blank" class="s-btn wa"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a id="m-tg" href="https://t.me/habib_2026" target="_blank" class="s-btn tg"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        </div>
+        <button onclick="closeModal()" style="background:none; border:none; color:white; margin-top:25px; cursor:pointer; opacity:0.4;">БАРГАШТ</button>
     </div>
 </div>
 
@@ -161,146 +217,124 @@
         messagingSenderId: "378177007395",
         appId: "1:378177007395:web:e4cfb100c4e3b5a0d52696"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let tempImg = "", allProducts = [], isAdmin = false;
+    
+    let allProducts = [];
     let favorites = JSON.parse(localStorage.getItem('mkt_favs')) || [];
-
-    // --- ЛОГИКАИ ҲИСОБКУНАК ---
-    function updateCounter() {
-        const counterRef = db.ref('stats/views');
-        counterRef.transaction((currentValue) => {
-            return (currentValue || 0) + 1;
-        });
-    }
-
-    function handleAdminLogin(el) {
-        if(isAdmin) navigate('admin', el);
-        else if(prompt("Пароли админ:") === "ANONYMOUS*2009") { 
-            isAdmin = true; 
-            renderUI(allProducts); 
-            db.ref('stats/views').on('value', (snap) => {
-                document.getElementById('viewCount').innerText = snap.val() || 0;
-            });
-            navigate('admin', el); 
-        }
-    }
-
-    function processImg(input) {
-        const reader = new FileReader();
-        reader.onload = (e) => tempImg = e.target.result;
-        reader.readAsDataURL(input.files[0]);
-    }
-
-    function saveProduct() {
-        const name = document.getElementById('p-name').value, price = document.getElementById('p-price').value,
-              oldP = document.getElementById('p-old-price').value, cat = document.getElementById('p-cat').value,
-              desc = document.getElementById('p-desc').value;
-        if(name && price && tempImg) {
-            db.ref('products').push({ name, price, oldPrice: oldP || "", cat, desc, img: tempImg, pinned: false }).then(() => location.reload());
-        }
-    }
-
-    function togglePin(id, currentStatus) {
-        db.ref('products/' + id).update({ pinned: !currentStatus });
-    }
-
-    function saveNews() {
-        const txt = document.getElementById('n-text').value;
-        if(txt) db.ref('news').push({ txt, date: new Date().toLocaleDateString() }).then(() => document.getElementById('n-text').value="");
-    }
+    let modalImgs = [];
+    let modalIdx = 0;
 
     window.onload = () => {
-        updateCounter(); // Ҳисоб кардани бинандаи нав
-        db.ref('products').on('value', (snap) => {
+        db.ref('products').on('value', snap => {
             allProducts = []; const data = snap.val();
             for(let id in data) allProducts.push({ id, ...data[id] });
-            allProducts.sort((a, b) => (b.pinned || false) - (a.pinned || false));
+            allProducts.sort((a,b) => (b.pinned || false) - (a.pinned || false));
             renderUI(allProducts);
         });
-        db.ref('news').on('value', renderNews);
-    };
 
-    function renderNews(snap) {
-        const data = snap.val(); let html = "", count = 0;
-        for(let id in data) {
-            count++;
-            html += `<div class="news-item">
-                <p>${data[id].txt}</p><small>${data[id].date}</small>
-                ${isAdmin ? `<i class="fas fa-trash-alt news-del-btn" onclick="deleteItem('news/${id}')"></i>` : ''}
-            </div>`;
-        }
-        document.getElementById('news-list-content').innerHTML = html || "Хабар нест.";
-        document.getElementById('badge').style.display = count > 0 ? 'flex' : 'none';
-        document.getElementById('badge').innerText = count;
-    }
+        db.ref('news').on('value', snap => {
+            const data = snap.val(); let html = ""; let count = 0;
+            for(let id in data) { 
+                count++; 
+                html += `<div style="padding:12px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02); border-radius:15px; margin-bottom:8px;">
+                            <p>${data[id].txt}</p>
+                            <small style="opacity:0.4; font-size:10px;">${data[id].date || ''}</small>
+                         </div>`; 
+            }
+            document.getElementById('news-content').innerHTML = html || "Хабар нест.";
+            document.getElementById('badge').style.display = count > 0 ? 'block' : 'none';
+        });
+    };
 
     function renderUI(list) {
         let html = "";
         list.forEach(p => {
             const isFav = favorites.includes(p.id);
-            const op = p.oldPrice ? `<span class="old-price">${p.oldPrice} TJS</span>` : "";
-            const isPinned = p.pinned || false;
-            html += `<div class="card ${isPinned ? 'pinned' : ''}">
-                ${isPinned ? '<i class="fas fa-thumbtack pin-icon"></i>' : ''}
-                <i class="fa-heart fav-btn ${isFav?'fas active':'far'}" onclick="toggleFav('${p.id}')"></i>
-                <img src="${p.img}" onclick="openModal('${p.img}', '${p.name}', '${p.price}', '${p.desc}')">
-                <h4>${p.name}</h4><p class="price">${op}${p.price} TJS</p>
-                ${isAdmin ? `<div class="admin-btns">
-                    <button onclick="togglePin('${p.id}', ${isPinned})" class="btn-sm" style="background:var(--gold)">${isPinned ? '📌 Открепить' : '📌 Закрепить'}</button>
-                    <button onclick="deleteItem('products/${p.id}')" class="btn-sm" style="background:red">Удалить</button>
-                </div>` : ''}
+            const mainImg = Array.isArray(p.images) ? p.images[0] : (p.img || "");
+            
+            // Намоиши нархи кӯҳна агар бошад
+            let priceDisplay = p.oldPrice 
+                ? `<span class="old-price">${p.oldPrice} TJS</span> <span>${p.price} TJS</span>`
+                : `<span>${p.price} TJS</span>`;
+
+            html += `<div class="card">
+                ${p.pinned ? '<div class="pin-tag"><i class="fas fa-thumbtack"></i> TOP</div>' : ''}
+                <i class="fa-heart ${isFav ? 'fas' : 'far'}" onclick="toggleFav('${p.id}')" style="position:absolute; top:15px; right:15px; z-index:10; cursor:pointer; font-size:20px; color:${isFav?'#ff4757':'rgba(255,255,255,0.3)'}"></i>
+                <img src="${mainImg}" onclick="openModal('${p.id}')">
+                <h4 style="font-size:14px; margin-top:10px; font-weight:500; color:#e2e8f0;">${p.name}</h4>
+                <div class="price-tag">${priceDisplay}</div>
             </div>`;
         });
-        document.getElementById('productGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center;'>Мол нест.</p>";
+        document.getElementById('productGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center; opacity:0.5; padding:50px;'>Мол ёфт нашуд.</p>";
     }
 
-    function toggleFav(id) {
-        if(!favorites.includes(id)) favorites.push(id); else favorites = favorites.filter(f => f !== id);
-        localStorage.setItem('mkt_favs', JSON.stringify(favorites));
-        renderUI(allProducts); if(document.getElementById('favs').classList.contains('active')) renderFavs();
-    }
+    function openModal(id) {
+        const p = allProducts.find(x => x.id === id);
+        modalImgs = Array.isArray(p.images) ? p.images : [p.img];
+        modalIdx = 0;
+        document.getElementById('m-name').innerText = p.name;
+        
+        // Нархи модал бо скидка
+        let modalPrice = p.oldPrice 
+            ? `<span class="old-price" style="font-size:18px;">${p.oldPrice} TJS</span> <span>${p.price} TJS</span>`
+            : `<span>${p.price} TJS</span>`;
+        document.getElementById('m-price-box').innerHTML = modalPrice;
 
-    function renderFavs() {
-        const favList = allProducts.filter(p => favorites.includes(p.id));
-        let html = "";
-        favList.forEach(p => {
-            html += `<div class="card"><i class="fas fa-heart fav-btn active" onclick="toggleFav('${p.id}')"></i>
-                <img src="${p.img}" onclick="openModal('${p.img}', '${p.name}', '${p.price}', '${p.desc}')">
-                <h4>${p.name}</h4><p class="price">${p.price} TJS</p></div>`;
-        });
-        document.getElementById('favGrid').innerHTML = html || "<p style='grid-column:1/3; text-align:center;'>Холӣ аст.</p>";
-    }
-
-    function filterCat(cat, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderUI(cat === 'Ҳама' ? allProducts : allProducts.filter(p => p.cat === cat));
-    }
-
-    function liveSearch() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        renderUI(allProducts.filter(p => p.name.toLowerCase().includes(term)));
-    }
-
-    function openModal(img, name, price, desc) {
-        document.getElementById('m-img').src = img;
-        document.getElementById('m-name').innerText = name;
-        document.getElementById('m-price').innerText = price + " TJS";
-        document.getElementById('m-desc').innerText = desc || "Тавсиф надорад.";
-        document.getElementById('m-wa').href = `https://wa.me/992900000000?text=Салом! Ман мехоҳам инро харам: ${name}`;
+        document.getElementById('m-desc').innerText = p.desc || "Тавсиф барои ин мол мавҷуд нест.";
+        document.getElementById('m-wa').href = `https://wa.me/992900000000?text=Салом! Ман мехоҳам инро харам: ${p.name}`;
+        updateSlider();
         document.getElementById('p-modal').style.display = 'flex';
     }
 
+    function moveImg(s) {
+        modalIdx += s;
+        if(modalIdx < 0) modalIdx = modalImgs.length - 1;
+        if(modalIdx >= modalImgs.length) modalIdx = 0;
+        updateSlider();
+    }
+
+    function updateSlider() { document.getElementById('m-img').src = modalImgs[modalIdx]; }
     function closeModal() { document.getElementById('p-modal').style.display = 'none'; }
-    function deleteItem(path) { if(confirm("Нест карда шавад?")) db.ref(path).remove(); }
-    function toggleNotif() { const p = document.getElementById('notif-panel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
-    function navigate(id, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
+    
+    function toggleFav(id) {
+        if(favorites.includes(id)) favorites = favorites.filter(f => f !== id);
+        else favorites.push(id);
+        localStorage.setItem('mkt_favs', JSON.stringify(favorites));
+        renderUI(allProducts);
+    }
+
+    function showPage(pId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        document.getElementById(pId).style.display = 'block';
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function toggleNews() { 
+        const p = document.getElementById('news-panel'); 
+        p.style.display = p.style.display === 'block' ? 'none' : 'block'; 
+    }
+
+    function liveSearch() { 
+        const v = document.getElementById('searchInput').value.toLowerCase(); 
+        renderUI(allProducts.filter(p => p.name.toLowerCase().includes(v))); 
+    }
+
+    function filterCat(c, b) { 
+        document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); 
+        b.classList.add('active'); 
+        renderUI(c === 'Ҳама' ? allProducts : allProducts.filter(p => p.cat === c)); 
+    }
+
+    function renderFavs() {
+        const fData = allProducts.filter(p => favorites.includes(p.id));
+        let h = "";
+        fData.forEach(p => {
+            const mImg = Array.isArray(p.images) ? p.images[0] : (p.img || "");
+            h += `<div class="card"><img src="${mImg}" onclick="openModal('${p.id}')"><h4>${p.name}</h4><div class="price-tag">${p.price} TJS</div></div>`;
+        });
+        document.getElementById('favGrid').innerHTML = h || "<p style='grid-column:1/3; text-align:center; padding:50px;'>Рӯйхат холӣ аст.</p>";
     }
 </script>
 </body>
